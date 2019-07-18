@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db-config>
+    <!--数据源配置约定-->
+    <!--dbName数据源名字，一般以数据库类型名字命名，如mysql,oracle，可以任意起名字，用来区分不同数据源-->
+    <!--active数据源激活状态，true激活，表示使用该数据源，false停用状态，不能使用该数据源-->
+    <db-source active="true" dbName="mysql">
+        <!--驱动包-->
+        <property name="driverClass">com.mysql.jdbc.Driver</property>
+        <!--连接地址-->
+        <property name="jdbcUrl">jdbc:mysql://192.168.0.45:3306/test_db</property>
+        <!--账号-->
+        <property name="username">root</property>
+        <!--密码-->
+        <property name="password">mysqladmin</property>
+        <!-- 初始化连接池时建立多少个连接,默认3 -->
+        <property name="initialPoolSize">3</property>
+        <!-- 连接池中保留的最大连接数,默认6 -->
+        <property name="maxPoolSize">6</property>
+        <!-- 空闲连接超时时间(毫秒) -->
+        <property name="keepAliveTime">10000</property>
+    </db-source>
+
+    <!--配置数据源sqlserver -->
+    <db-source  dbName="sqlserver">
+        <!--驱动包-->
+        <property name="driverClass">net.sourceforge.jtds.jdbc.Driver</property>
+        <!--连接地址-->
+        <property name="jdbcUrl">jdbc:jtds:sqlserver://172.16.3.58:1433/ssitdb</property>
+        <!--账号-->
+        <property name="username">ssit</property>
+        <!--密码-->
+        <property name="password">ssit123456</property>
+        <!-- 初始化连接池时建立多少个连接 -->
+        <property name="initialPoolSize">3</property>
+        <!-- 连接池中保留的最大连接数 -->
+        <property name="maxPoolSize">6</property>
+        <!-- 空闲连接超时时间(毫秒) -->
+        <property name="keepAliveTime">10000</property>
+    </db-source>
+
+
+    <!--配置数据源oracle-->
+    <db-source dbName="oracle">
+        <!--驱动包-->
+        <property name="driverClass">oracle.jdbc.driver.OracleDriver</property>
+        <!--连接地址-->
+        <property name="jdbcUrl">jdbc:oracle:thin:@localhost:1521:orcl</property>
+        <!--账号-->
+        <property name="username">root</property>
+        <!--密码-->
+        <property name="password">mysqladmin</property>
+        <!-- 初始化连接池时建立多少个连接 -->
+        <property name="initialPoolSize">3</property>
+        <!-- 连接池中保留的最大连接数 -->
+        <property name="maxPoolSize">6</property>
+        <!-- 空闲连接超时时间(毫秒) -->
+        <property name="keepAliveTime">10000</property>
+    </db-source>
+</db-config>
