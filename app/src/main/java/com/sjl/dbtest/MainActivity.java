@@ -203,12 +203,7 @@ public class MainActivity extends AppCompatActivity {
                         in.close();
                         showImg(orgBytes);
                     }
-                    MainActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            textView.setText(System.currentTimeMillis() + ":" + sb.toString());
-                        }
-                    });
+                    showMsg(System.currentTimeMillis() + ":" + sb.toString());
                     //关闭
                     resultSet.close();
                     statement.close();
@@ -234,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         count = 0;
+        //多线程查询
         for (int i = 0; i < 10; i++) {//并发测试
             new Thread(new Runnable() {
                 @Override
@@ -356,8 +352,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void showMsg(String s) {
-        textView.setText(s);
+    private void showMsg(final String s) {
+        MainActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textView.setText(s);
+            }
+        });
     }
 
 
