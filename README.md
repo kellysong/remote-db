@@ -108,6 +108,16 @@ or 方法2：
 
 [https://blog.csdn.net/u011082160/article/details/96303046](https://blog.csdn.net/u011082160/article/details/96303046 "https://blog.csdn.net/u011082160/article/details/96303046")
 
+# 混淆
+
+	-keep class com.sjl.remotedb.dao.SyncDaoExecutor { 
+ 		public static SyncDaoExecutor init(java.lang.String);
+	}
+	-keep class com.sjl.remotedb.dao.AsyncDaoExecutor { 
+	 		public static AsyncDaoExecutor init(java.lang.String);
+		}
+	-keep class org.apache.commons.dbutils.**{*;}
+
 # License
 
     Copyright 2019 Song Jiali

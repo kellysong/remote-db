@@ -3,6 +3,7 @@ package com.sjl.dbtest;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -353,12 +354,21 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void showMsg(final String s) {
-        MainActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                textView.setText(s);
-            }
-        });
+        if (isMainThread()){
+            textView.setText(s);
+        }else {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textView.setText(s);
+                }
+            });
+        }
+
+    }
+
+    public boolean isMainThread() {
+        return Looper.getMainLooper() == Looper.myLooper();
     }
 
 
