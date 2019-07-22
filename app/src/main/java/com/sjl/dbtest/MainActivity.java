@@ -220,6 +220,8 @@ public class MainActivity extends AppCompatActivity {
 
     int count = 0;
 
+    private Object object = new Object();
+
     /**
      * 查询(set方式实例化SyncDaoExecutor)，自动映射成bean
      *
@@ -248,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
                                 showImg(testImg);
 
                             }
-                            synchronized (this) {
+                            synchronized (object) {
                                 ++count;
                                 LogUtils.i("成功次数：" + count);
                             }
