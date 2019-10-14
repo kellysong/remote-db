@@ -2,6 +2,8 @@ package com.sjl.remotedb.dao;
 
 import com.sjl.remotedb.db.DbPoolManager;
 import com.sjl.remotedb.db.SimpleDataSource;
+import com.sjl.remotedb.page.Page;
+import com.sjl.remotedb.page.SqlPageHandle;
 
 import java.util.List;
 import java.util.Map;
@@ -62,15 +64,10 @@ public class SyncDaoExecutor implements DaoExecutor {
     }
 
     @Override
-    public <T> List<T> findPageByUnconditional(int start, int end, String sql, Class<T> classT) {
-        return baseDao.findPageByUnconditional(simpleDataSource.getConnection(), start, end, sql, classT);
+    public <T> Page<T> queryPagination(SqlPageHandle sqlPageHandle, Class<T> classT, Object[] params) {
+        return baseDao.queryPagination(simpleDataSource.getConnection(), sqlPageHandle, classT, params);
     }
 
-    @Override
-    public <T> List<T> findPageByConditional(String sql, Class<T> classT, Object... params) {
-        return baseDao.findPageByConditional(simpleDataSource.getConnection(), sql, classT, params);
-
-    }
 
     @Override
     public Map<String, Object> queryBeanForMap(String sql, Object... params) {

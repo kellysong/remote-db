@@ -268,6 +268,7 @@ public class SimpleDataSource extends AbstractDataSource {
     public void shutDataSource() {
         if (monitorThread != null) {
             monitorThread.isRunning = false;
+            monitorThread = null;
         }
         Log.w(TAG, "开始关闭数据源：" + dbConfig.getDbName());
         Log.w(TAG, "   停止线程检测成功");

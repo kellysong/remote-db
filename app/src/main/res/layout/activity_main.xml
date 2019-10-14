@@ -16,7 +16,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="testDBConn"
+            android:onClick="initDBConn"
             android:text="初始化数据库连接池" />
 
         <Button
@@ -110,6 +110,12 @@
             android:layout_height="wrap_content"
             android:onClick="queryListMap"
             android:text="查询为ListMap" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="queryByPage"
+            android:text="带条件分页查询" />
     </LinearLayout>
 
     <ImageView

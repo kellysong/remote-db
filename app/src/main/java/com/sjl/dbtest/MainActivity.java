@@ -17,6 +17,9 @@ import com.sjl.remotedb.dao.ExecutorCallback;
 import com.sjl.remotedb.dao.SyncDaoExecutor;
 import com.sjl.remotedb.db.DbCallback;
 import com.sjl.remotedb.db.DbPoolManager;
+import com.sjl.remotedb.page.MysqlSqlPageHandleImpl;
+import com.sjl.remotedb.page.Page;
+import com.sjl.remotedb.page.SqlPageHandle;
 import com.sjl.remotedb.util.CollectionUtils;
 import com.sjl.util.ByteUtils;
 import com.sjl.util.LogUtils;
@@ -68,10 +71,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void testDBConn(View view) {
+    public void initDBConn(View view) {
 
         //网络加载
-       /*   RemoteDb.get().initDataSource("http://192.168.0.45:8080/test/db-config.xml", new DbCallback() {
+       /*   RemoteDb.get().initDataSource("http://192.168.0.88:8080/test/db-config.xml", new DbCallback() {
             @Override
             public void onSuccess() {
                 initMysqlExecutor();
@@ -356,9 +359,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void showMsg(final String s) {
-        if (isMainThread()){
+        if (isMainThread()) {
             textView.setText(s);
-        }else {
+        } else {
             this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -506,5 +509,27 @@ public class MainActivity extends AppCompatActivity {
                 LogUtils.e("queryListMap", e);
             }
         });
+    }
+
+    public void queryByPage(View view) {
+        if (asyncDaoExecutor == null) {
+            return;
+        }
+
+        String sql = "select * from test_table where test_name like ?";
+        Object[] params = {"%李四%"};
+
+        SqlPageHandle sqlPageHandle = new MysqlSqlPageHandleImpl(sql, 1, 10);
+        asyncDaoExecutor.queryPagination(sqlPageHandle, TestTable.class, new ExecutorCallback<Page<TestTable>>() {
+            @Override
+            public void onSuccess(Page<TestTable> page) {
+                showMsg(System.currentTimeMillis() + "分页查询成功:" + page.getResultList().toString());
+            }
+
+            @Override
+            public void onFailed(Throwable e) {
+                LogUtils.e("queryPagination", e);
+            }
+        }, params);
     }
 }

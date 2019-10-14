@@ -1,5 +1,7 @@
 package com.sjl.remotedb.dao;
 
+import com.sjl.remotedb.page.Page;
+import com.sjl.remotedb.page.SqlPageHandle;
 import com.sjl.remotedb.util.AsyncTaskUtils;
 import com.sjl.remotedb.util.Callback;
 
@@ -66,7 +68,7 @@ public class AsyncDaoExecutor {
      * @param <T>
      */
     public <T> void queryBean(final String sql, final Class<T> classT, final ExecutorCallback<T> executorCallback, final Object... params) {
-        AsyncTaskUtils.doAsync(new Callable<T>() {
+        AsyncTaskUtils.doAsync2(new Callable<T>() {
             @Override
             public T call() throws Exception {
                 return syncDaoExecutor.queryBean(sql, classT, params);
@@ -98,7 +100,7 @@ public class AsyncDaoExecutor {
      * @param <T>
      */
     public <T> void queryBeanList(final String sql, final Class<T> classT, final ExecutorCallback<List<T>> executorCallback, final Object... params) {
-        AsyncTaskUtils.doAsync(new Callable<List<T>>() {
+        AsyncTaskUtils.doAsync2(new Callable<List<T>>() {
             @Override
             public List<T> call() throws Exception {
                 return syncDaoExecutor.queryBeanList(sql, classT, params);
@@ -128,7 +130,7 @@ public class AsyncDaoExecutor {
      * @param params
      */
     public void findTotalRecordNum(final String sql, final ExecutorCallback<Long> executorCallback, final Object... params) {
-        AsyncTaskUtils.doAsync(new Callable<Long>() {
+        AsyncTaskUtils.doAsync2(new Callable<Long>() {
             @Override
             public Long call() throws Exception {
                 return syncDaoExecutor.findTotalRecordNum(sql, params);
@@ -150,24 +152,25 @@ public class AsyncDaoExecutor {
         });
     }
 
-
     /**
-     * 无条件分页查询
+     * 分页查询
      *
-     * @param sql
+     * @param sqlPageHandle
      * @param classT
      * @param executorCallback
+     * @param params
      * @param <T>
+     * @return
      */
-    public <T> void findPageByUnconditional(final int start, final int end, final String sql, final Class<T> classT, final ExecutorCallback<List<T>> executorCallback) {
-        AsyncTaskUtils.doAsync(new Callable<List<T>>() {
+    public <T> void queryPagination(final SqlPageHandle sqlPageHandle, final Class<T> classT, final ExecutorCallback<Page<T>> executorCallback, final Object... params) {
+        AsyncTaskUtils.doAsync2(new Callable<Page<T>>() {
             @Override
-            public List<T> call() throws Exception {
-                return syncDaoExecutor.findPageByUnconditional(start, end, sql, classT);
+            public Page<T> call() throws Exception {
+                return syncDaoExecutor.queryPagination(sqlPageHandle, classT, params);
             }
-        }, new Callback<List<T>>() {
+        }, new Callback<Page<T>>() {
             @Override
-            public void accept(List<T> result) {
+            public void accept(Page<T> result) {
                 if (executorCallback != null) {
                     executorCallback.onSuccess(result);
                 }
@@ -182,36 +185,6 @@ public class AsyncDaoExecutor {
         });
     }
 
-    /**
-     * 有条件查询
-     *
-     * @param sql
-     * @param classT
-     * @param executorCallback
-     * @param <T>
-     */
-    public <T> void findPageByConditional(final String sql, final Class<T> classT, final ExecutorCallback<List<T>> executorCallback, final Object... params) {
-        AsyncTaskUtils.doAsync(new Callable<List<T>>() {
-            @Override
-            public List<T> call() throws Exception {
-                return syncDaoExecutor.findPageByConditional(sql, classT, params);
-            }
-        }, new Callback<List<T>>() {
-            @Override
-            public void accept(List<T> result) {
-                if (executorCallback != null) {
-                    executorCallback.onSuccess(result);
-                }
-            }
-        }, new Callback<Throwable>() {
-            @Override
-            public void accept(Throwable throwable) {
-                if (executorCallback != null) {
-                    executorCallback.onFailed(throwable);
-                }
-            }
-        });
-    }
 
     /**
      * 将查询出结果集中的第一条记录，并封装成Map对象,以数据库的列名为Key，列值为Value
@@ -222,7 +195,7 @@ public class AsyncDaoExecutor {
      */
     public void queryBeanForMap(final String sql, final ExecutorCallback<Map<String, Object>> executorCallback, final Object... params) {
 
-        AsyncTaskUtils.doAsync(new Callable<Map<String, Object>>() {
+        AsyncTaskUtils.doAsync2(new Callable<Map<String, Object>>() {
             @Override
             public Map<String, Object> call() throws Exception {
                 return syncDaoExecutor.queryBeanForMap(sql, params);
@@ -253,7 +226,7 @@ public class AsyncDaoExecutor {
      * @param params
      */
     public void queryBeanColumn(final String sql, final String columnName, final ExecutorCallback<Object> executorCallback, final Object... params) {
-        AsyncTaskUtils.doAsync(new Callable<Object>() {
+        AsyncTaskUtils.doAsync2(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
                 return syncDaoExecutor.queryBeanColumn(sql, columnName, params);
@@ -284,7 +257,7 @@ public class AsyncDaoExecutor {
      */
     public void queryBeanForListMap(final String sql, final ExecutorCallback<List<Map<String, Object>>> executorCallback, final Object... params) {
 
-        AsyncTaskUtils.doAsync(new Callable<List<Map<String, Object>>>() {
+        AsyncTaskUtils.doAsync2(new Callable<List<Map<String, Object>>>() {
             @Override
             public List<Map<String, Object>> call() throws Exception {
                 return syncDaoExecutor.queryBeanForListMap(sql, params);
@@ -315,7 +288,7 @@ public class AsyncDaoExecutor {
      * @param <T>
      */
     public <T> void update(final String sql, final ExecutorCallback<Boolean> executorCallback, final Object... params) {
-        AsyncTaskUtils.doAsync(new Callable<Boolean>() {
+        AsyncTaskUtils.doAsync2(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 return syncDaoExecutor.update(sql, params);
@@ -346,7 +319,7 @@ public class AsyncDaoExecutor {
      * @param <T>
      */
     public <T> void updateInTx(final String sql, final ExecutorCallback<Boolean> executorCallback, final Object... params) {
-        AsyncTaskUtils.doAsync(new Callable<Boolean>() {
+        AsyncTaskUtils.doAsync2(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 return syncDaoExecutor.updateInTx(sql, params);
@@ -377,7 +350,7 @@ public class AsyncDaoExecutor {
      * @param <T>
      */
     public <T> void batchUpdateInTx(final String sql, final Object[][] params, final ExecutorCallback<Boolean> executorCallback) {
-        AsyncTaskUtils.doAsync(new Callable<Boolean>() {
+        AsyncTaskUtils.doAsync2(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 return syncDaoExecutor.batchUpdateInTx(sql, params);
@@ -408,7 +381,7 @@ public class AsyncDaoExecutor {
      * @param <T>
      */
     public <T> void batchDeleteInTx(final String sql, final String[] ids, final ExecutorCallback<Boolean> executorCallback) {
-        AsyncTaskUtils.doAsync(new Callable<Boolean>() {
+        AsyncTaskUtils.doAsync2(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 syncDaoExecutor.batchDeleteInTx(sql, ids);

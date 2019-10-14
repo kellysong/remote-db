@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.sjl.remotedb.db.DbPoolManager;
 import com.sjl.remotedb.db.SimpleDataSource;
+import com.sjl.remotedb.page.Page;
+import com.sjl.remotedb.page.SqlPageHandle;
 
 import org.apache.commons.dbutils.BasicRowProcessor;
 import org.apache.commons.dbutils.BeanProcessor;
@@ -68,7 +70,7 @@ public class BaseDao<T> implements IBaseDao<T> {
                     /**
                      * proxy:代理类代理的真实代理对象com.sun.proxy.$Proxy0
                      * method:我们所要调用某个对象真实的方法的Method对象
-                     * args:们所要调用某个对象的方法参数
+                     * args:我们所要调用某个对象的方法参数
                      */
                     @Override
                     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -120,32 +122,29 @@ public class BaseDao<T> implements IBaseDao<T> {
         }
     }
 
-
     @Override
-    public List<T> findPageByUnconditional(Connection conn, int start, int end, String sql, Class<T> classT)// 测试没问题
-    {
-        List<T> result;
+    public <T> Page<T> queryPagination(Connection conn, SqlPageHandle sqlPageHandle, Class<T> classT, Object[] params) {
         try {
-            result = queryRunner.query(conn, sql, new BeanListHandler<T>(classT, getRowProcessor()), start, end);
-            return result;
+            List<T> list;
+            List<T> totalList;
+            // 将SQL语句进行分页处理
+            String sql = sqlPageHandle.oldSQL;
+            String newSql = sqlPageHandle.handlerPagingSQL();
+            if (params == null || params.length <= 0) {
+                totalList = queryRunner.query(conn, sql, new BeanListHandler<T>(classT, getRowProcessor()));
+                list = queryRunner.query(conn, newSql, new BeanListHandler<T>(classT, getRowProcessor()));
+            } else {
+                totalList = queryRunner.query(conn, sql, new BeanListHandler<T>(classT, getRowProcessor()), params);
+                list = queryRunner.query(conn, newSql, new BeanListHandler<T>(classT, getRowProcessor()), params);
+            }
+            Page<T> page = new Page<T>(sqlPageHandle.pageNo, sqlPageHandle.pageSize, totalList == null || totalList.isEmpty() ? 0 : totalList.size(), list);
+            return page;
         } catch (Exception e) {
-            Log.e(TAG, "findPageByUnconditional 异常：" + sql, e);
-            throw new DaoException("findPageByUnconditional 异常：" + sql, e);
+            Log.e(TAG, "queryPagination 异常", e);
+            throw new DaoException("queryPagination 异常", e);
         }
     }
 
-
-    @Override
-    public List<T> findPageByConditional(Connection conn, String sql, Class<T> classT, Object... params) {// 测试没问题
-        List<T> result;
-        try {
-            result = queryRunner.query(conn, sql, new BeanListHandler<T>(classT, getRowProcessor()), params);
-            return result;
-        } catch (Exception e) {
-            Log.e(TAG, "findPageByConditional 异常：" + sql, e);
-            throw new DaoException("findPageByConditional 异常：" + sql, e);
-        }
-    }
 
     @Override
     public Map<String, Object> queryBeanForMap(Connection conn, String sql, Object... params) {

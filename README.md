@@ -24,7 +24,7 @@ Add it in your root build.gradle at the end of repositories:
 ##Step 2. Add the dependency
 
 	dependencies {
-		        implementation 'com.github.kellysong:remote-db:1.0.0'
+		        implementation 'com.github.kellysong:remote-db:1.1.0'
  				implementation 'mysql:mysql-connector-java:5.0.8'//mysql驱动包
 		}
 
@@ -88,6 +88,8 @@ or 方法2：
      	asyncDaoExecutor.queryBean(...){...}
         //将结果查询为BeanList
 		asyncDaoExecutor.queryBeanList(...){...}
+		//分页查询
+		asyncDaoExecutor.queryPagination(...){...}
 		//将结果查询为Map
         asyncDaoExecutor.queryBeanForMap(...){...}
 		//将结果查询为ListMap

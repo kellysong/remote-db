@@ -1,5 +1,8 @@
 package com.sjl.remotedb.dao;
 
+import com.sjl.remotedb.page.Page;
+import com.sjl.remotedb.page.SqlPageHandle;
+
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
@@ -19,10 +22,10 @@ interface IBaseDao<T> {
     /**
      * 查询得到一个bean
      *
-     * @param conn
-     * @param sql
-     * @param classT
-     * @param params
+     * @param conn   连接
+     * @param sql    sql语句
+     * @param classT 映射对象class
+     * @param params 条件参数
      * @return
      */
     T queryBean(Connection conn, String sql, Class<T> classT, Object... params);
@@ -31,10 +34,10 @@ interface IBaseDao<T> {
     /**
      * 查询得到一个list集合,有参数
      *
-     * @param conn
-     * @param sql
-     * @param classT
-     * @param params
+     * @param conn   连接
+     * @param sql    sql语句
+     * @param classT 映射对象class
+     * @param params 条件参数
      * @return
      */
     List<T> queryBeanList(Connection conn, String sql, Class<T> classT, Object... params);
@@ -43,43 +46,33 @@ interface IBaseDao<T> {
     /**
      * count(*)记录数
      *
-     * @param conn
-     * @param sql
-     * @param params
+     * @param conn   连接
+     * @param sql    sql语句
+     * @param params 条件参数
      * @return
      */
     long findTotalRecordNum(Connection conn, String sql, Object... params);
 
-    /**
-     * mysql无条件分页
-     *
-     * @param conn
-     * @param start
-     * @param end
-     * @param sql
-     * @param classT
-     * @return
-     */
-    List<T> findPageByUnconditional(Connection conn, int start, int end, String sql, Class<T> classT);
 
     /**
-     * mysql条件分页
+     * 分页查询
      *
-     * @param conn
-     * @param sql
-     * @param classT
-     * @param params 参数包括查询条件参数，分页起始位置
+     * @param conn          连接
+     * @param sqlPageHandle 分页handle
+     * @param classT        映射对象class
+     * @param params        条件参数
+     * @param <T>
      * @return
-     * @throws Exception
      */
-    List<T> findPageByConditional(Connection conn, String sql, Class<T> classT, Object... params);
+    <T> Page<T> queryPagination(Connection conn, SqlPageHandle sqlPageHandle, Class<T> classT, Object[] params);
 
 
     /**
      * 将查询出结果集中的第一条记录，并封装成Map对象,以数据库的列名为Key，列值为Value
      *
-     * @param conn
-     * @param sql
+     * @param conn   连接
+     * @param sql    sql语句
+     * @param params 条件参数
      * @return
      */
     Map<String, Object> queryBeanForMap(Connection conn, String sql, Object... params);
@@ -87,10 +80,11 @@ interface IBaseDao<T> {
 
     /**
      * 查询某一条记录，并将指定列的数据转换为Object
-     * @param conn
-     * @param sql
-     * @param columnName
-     * @param params
+     *
+     * @param conn       连接
+     * @param sql        sql语句
+     * @param columnName 列名
+     * @param params     条件参数
      * @return
      */
     Object queryBeanColumn(Connection conn, String sql, String columnName, Object... params);
@@ -99,9 +93,9 @@ interface IBaseDao<T> {
     /**
      * 将查询出的结果集中每一行保存到一个Map对象中，然后将所有Map对象保存到List中
      *
-     * @param conn
-     * @param sql
-     * @param params
+     * @param conn   连接
+     * @param sql    sql语句
+     * @param params 条件参数
      * @return
      */
     List<Map<String, Object>> queryBeanForListMap(Connection conn, String sql, Object... params);
@@ -110,8 +104,8 @@ interface IBaseDao<T> {
     /**
      * 更新(update、insert、delete，返回受影响的行数)
      *
-     * @param sql
-     * @param params
+     * @param sql    sql语句
+     * @param params 条件参数
      * @return true成功 false失败
      */
     boolean update(Connection conn, String sql, Object... params);
@@ -120,8 +114,8 @@ interface IBaseDao<T> {
      * 使用事务单个更新(update、insert、delete，返回受影响的行数)
      *
      * @param conn
-     * @param sql
-     * @param params
+     * @param sql    sql语句
+     * @param params 条件参数
      * @return true成功 false失败
      */
     boolean updateInTx(Connection conn, String sql, Object... params);
@@ -130,9 +124,9 @@ interface IBaseDao<T> {
     /**
      * 使用事务批量更新(update、insert、delete，返回受影响的行数)
      *
-     * @param conn
-     * @param sql
-     * @param params
+     * @param conn   连接
+     * @param sql    sql语句
+     * @param params 条件参数
      * @return true成功 false失败
      */
     boolean batchUpdateInTx(Connection conn, String sql, Object[][] params);
@@ -140,8 +134,8 @@ interface IBaseDao<T> {
     /**
      * 使用事务批量删除
      *
-     * @param conn
-     * @param sql
+     * @param conn 连接
+     * @param sql  sql语句
      * @param ids  删除的id
      */
     void batchDeleteInTx(Connection conn, String sql, String[] ids);
