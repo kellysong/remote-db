@@ -119,7 +119,7 @@ public class SimpleDataSource extends AbstractDataSource {
                 } else {
                     //超出连接数,等待
                     try {
-                        wait(5 * 1000);
+                        wait(10 * 1000);
                         conn = getConnection();
                     } catch (InterruptedException e) {
                         Log.e(TAG, "等待连接异常", e);
@@ -216,7 +216,7 @@ public class SimpleDataSource extends AbstractDataSource {
                 LinkedList<Connection> freeConnection = simpleDataSource.freeConnection;
                 Map<Integer, Long> timeOutMap = simpleDataSource.timeOutMap;
                 try {
-                    for (int i = 0; i < freeConnection.size(); i++) {
+                    for (int i = freeConnection.size() - 1; i >= 0; i--) {
                         Connection connection = freeConnection.get(i);
                         int hc = connection.hashCode();
                         Long time = timeOutMap.get(hc);

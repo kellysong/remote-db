@@ -36,14 +36,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="testDBData2"
-        android:text="查询（set方式实例化SyncDaoExecutor）"
+        android:text="查询(set方式实例化SyncDaoExecutor,并发)"
         android:textSize="14sp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="testDBData3"
-        android:text="查询（注解方式实例化SyncDaoExecutor）"
+        android:text="查询(注解方式实例化SyncDaoExecutor)"
         android:textSize="14sp" />
 
     <TextView
@@ -55,14 +55,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="testDBData4"
-        android:text="查询（set方式实例化AsyncDaoExecutor）"
+        android:text="查询(set方式实例化AsyncDaoExecutor)"
         android:textSize="14sp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="testDBData5"
-        android:text="查询（注解方式实例化AsyncDaoExecutor）"
+        android:text="查询(注解方式实例化AsyncDaoExecutor)"
         android:textSize="14sp" />
 
     <TextView

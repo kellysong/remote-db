@@ -56,10 +56,10 @@ public class DbXmlParser {
         }
         List<DbConfig> dbConfigList = new ArrayList<>();
         for (DbXmlBean.DbSource dbSource : dbSources) {
-            DbConfig dbConfig = new DbConfig();
-            dbConfig.setDbName(dbSource.getDbName());
-            dbConfig.setActive(dbSource.isActive());
-            Class dbClz = dbConfig.getClass();
+            DbConfig.Builder builder = new DbConfig.Builder();
+            builder.setDbName(dbSource.getDbName());
+            builder.setActive(dbSource.isActive());
+            Class dbClz = builder.getClass();
             List<DbXmlBean.DbSource.Property> properties = dbSource.getProperties();
             if (properties != null && !properties.isEmpty()) {
                 for (DbXmlBean.DbSource.Property property : properties) {
@@ -72,23 +72,23 @@ public class DbXmlParser {
                     }
                     String typeName = field.getType().getName();
                     if (typeName.contains("String")) {
-                        field.set(dbConfig, text);
+                        field.set(builder, text);
                     } else if (typeName.contains("int")) {
-                        field.set(dbConfig, Integer.parseInt(text));
+                        field.set(builder, Integer.parseInt(text));
                     } else if (typeName.contains("long")) {
-                        field.set(dbConfig, Long.parseLong(text));
+                        field.set(builder, Long.parseLong(text));
                     } else if (typeName.contains("float")) {
-                        field.set(dbConfig, Float.parseFloat(text));
+                        field.set(builder, Float.parseFloat(text));
                     } else if (typeName.contains("double")) {
-                        field.set(dbConfig, Double.parseDouble(text));
+                        field.set(builder, Double.parseDouble(text));
                     } else if (typeName.contains("Integer")) {
-                        field.set(dbConfig, Integer.valueOf(text));
+                        field.set(builder, Integer.valueOf(text));
                     } else if (typeName.contains("Long")) {
-                        field.set(dbConfig, Long.valueOf(text));
+                        field.set(builder, Long.valueOf(text));
                     } else if (typeName.contains("Float")) {
-                        field.set(dbConfig, Float.valueOf(text));
+                        field.set(builder, Float.valueOf(text));
                     } else if (typeName.contains("Double")) {
-                        field.set(dbConfig, Double.valueOf(text));
+                        field.set(builder, Double.valueOf(text));
                     } else if (typeName.contains("Date")) {
                         Date date = null;
                         if (text.contains("CST")) {
@@ -102,10 +102,10 @@ public class DbXmlParser {
                                 Log.e(TAG, "date convert error:" + property.getName(), e);
                             }
                         }
-                        field.set(dbConfig, date);
+                        field.set(builder, date);
                     }
                 }
-                dbConfigList.add(dbConfig);
+                dbConfigList.add(builder.build());
             } else {
                 throw new RuntimeException("parse xml failed,node property doesn't exist.");
             }

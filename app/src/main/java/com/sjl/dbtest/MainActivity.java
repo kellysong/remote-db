@@ -101,17 +101,17 @@ public class MainActivity extends AppCompatActivity {
                 LogUtils.e("初始化数据源异常", e);
             }
         });
-       /* //手动初始化配置
-        DbConfig dbConfig = new DbConfig();
-        dbConfig.setDbName("mysql");
-        dbConfig.setActive(true);
-        dbConfig.setDriverClass("driverClass");
-        dbConfig.setJdbcUrl("jdbc:mysql://192.168.0.45:3306/test_db");
-        dbConfig.setUsername("root");
-        dbConfig.setPassword("mysqladmin");
-        dbConfig.setInitialPoolSize(3);
-        dbConfig.setMaxPoolSize(6);
-        dbConfig.setKeepAliveTime(5000);
+        //手动初始化配置
+        /*DbConfig dbConfig = new DbConfig.Builder()
+                .setDbName("mysql")
+                .setActive(true)
+                .setDriverClass("driverClass")
+                .setJdbcUrl("jdbc:mysql://192.168.0.45:3306/test_db")
+                .setUsername("root")
+                .setPassword("mysqladmin")
+                .setInitialPoolSize(3)
+                .setMaxPoolSize(6)
+                .setKeepAliveTime(5000).build();
 
         RemoteDb.get().initDataSource(dbConfig, new DbCallback() {
             @Override
@@ -511,19 +511,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private int pageNo = 1;
+
     public void queryByPage(View view) {
         if (asyncDaoExecutor == null) {
             return;
         }
-
+        if (pageNo > 10) {
+            pageNo = 1;
+        }
         String sql = "select * from test_table where test_name like ?";
         Object[] params = {"%李四%"};
 
-        SqlPageHandle sqlPageHandle = new MysqlSqlPageHandleImpl(sql, 1, 10);
+        SqlPageHandle sqlPageHandle = new MysqlSqlPageHandleImpl(sql, pageNo, 1);
         asyncDaoExecutor.queryPagination(sqlPageHandle, TestTable.class, new ExecutorCallback<Page<TestTable>>() {
             @Override
             public void onSuccess(Page<TestTable> page) {
                 showMsg(System.currentTimeMillis() + "分页查询成功:" + page.getResultList().toString());
+                pageNo++;
             }
 
             @Override

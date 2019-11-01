@@ -7,7 +7,7 @@
         <!--驱动包-->
         <property name="driverClass">com.mysql.jdbc.Driver</property>
         <!--连接地址-->
-        <property name="jdbcUrl">jdbc:mysql://192.168.0.88:3306/test_db</property>
+        <property name="jdbcUrl">jdbc:mysql://192.168.0.76:3306/test_db</property>
         <!--账号-->
         <property name="username">root</property>
         <!--密码-->
