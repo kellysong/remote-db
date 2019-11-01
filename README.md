@@ -112,13 +112,17 @@ or 方法2：
 
 # 混淆
 
+    -keep class com.sjl.remotedb.db.DbConfig{*;}
+    -keep class com.sjl.remotedb.db.DbXmlBean{*;}
 	-keep class com.sjl.remotedb.dao.SyncDaoExecutor { 
  		public static SyncDaoExecutor init(java.lang.String);
 	}
 	-keep class com.sjl.remotedb.dao.AsyncDaoExecutor { 
-	 		public static AsyncDaoExecutor init(java.lang.String);
-		}
+	 	public static AsyncDaoExecutor init(java.lang.String);
+	}
 	-keep class org.apache.commons.dbutils.**{*;}
+	-keep class org.xmlpull.v1.** { *;}
+    -dontwarn org.xmlpull.v1.**
 
 # License
 
