@@ -5,12 +5,14 @@
 2. 自定义了数据库连接池（负责分配、管理和释放数据库连接），支持配置多个数据源（连接不同的数据库）
 3. 支持同步和异步执行sql语句，支持注解注入dao实例（可配置单例还是多例），更方便地执行sql语句 
 4. 只要引入对应的数据库驱动包，即可连接mysql、sqlserver、oracle等数据库
+
 # 效果图
 
-<img src="https://github.com/kellysong/remote-db/blob/master/screenshot/example.png" width="30%" alt="加载中..."/>
+![](screenshot/example.png)
+
 # 引用
 
-##Step 1. Add the JitPack repository to your build file
+## Step 1. Add the JitPack repository to your build file
 
 Add it in your root build.gradle at the end of repositories:
 
@@ -21,11 +23,12 @@ Add it in your root build.gradle at the end of repositories:
         }
     }
 
-##Step 2. Add the dependency
+## Step 2. Add the dependency
 
 	dependencies {
 		        implementation 'com.github.kellysong:remote-db:1.1.0'
- 				implementation 'mysql:mysql-connector-java:5.0.8'//mysql驱动包
+				//mysql驱动包
+ 				implementation 'mysql:mysql-connector-java:5.0.8'
 		}
 
 
@@ -33,16 +36,16 @@ Add it in your root build.gradle at the end of repositories:
 ## 使用步骤
 
 ### 1.初始化数据源(只需要调用一次)
-		    DbConfig dbConfig = new DbConfig();
-	        dbConfig.setDbName("mysql");//dbName是数据源名字，可以自定义，主要用于区分不同的数据源
-	        dbConfig.setActive(true);
-	        dbConfig.setDriverClass("driverClass");
-	        dbConfig.setJdbcUrl("jdbc:mysql://localhost:3306/test_db");
-	        dbConfig.setUsername("xxxx");
-	        dbConfig.setPassword("xxxx");
-	        dbConfig.setInitialPoolSize(3);
-	        dbConfig.setMaxPoolSize(6);
-	        dbConfig.setKeepAliveTime(5000);
+	        DbConfig dbConfig = new DbConfig.Builder()
+                            .setDbName("mysql")//dbName是数据源名字，可以自定义，主要用于区分不同的数据源
+                            .setActive(true)
+                            .setDriverClass("com.mysql.jdbc.Driver")
+                            .setJdbcUrl("jdbc:mysql://192.168.0.45:3306/test_db")
+                            .setUsername("root")
+                            .setPassword("mysqladmin")
+                            .setInitialPoolSize(3)
+                            .setMaxPoolSize(6)
+                            .setKeepAliveTime(5000).build();
 	
 	        RemoteDb.get().initDataSource(dbConfig, new DbCallback() {
 	            @Override
